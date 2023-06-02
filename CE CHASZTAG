@@ -11,25 +11,26 @@ namespace Gra
         static void Main(string[] args)
         {
             Console.WriteLine("Witaj w goblin slayer!");
-
-            // Get player's name
+            Console.WriteLine("----------------------------");
+            // --------------------------------------------------
             Console.Write("Wybierz imie swojego bohatera: ");
-            string nazwagracza  = Console.ReadLine();
+            string nazwagracza = Console.ReadLine();
+            Console.WriteLine("-----------------------------");
             Console.Write("Witaj " + nazwagracza + " w grze RPG");
-            // Create a player
+            // --------------------------------------------------
             Gracz gracz = new Gracz(nazwagracza);
 
-            // Create an enemy
+            // --------------------------------------------------
             Przeciwnik przeciwnik = new Przeciwnik("Goblin");
 
-            // Game loop
+            // --------------------------------------------------
             while (gracz.Zyje && przeciwnik.Zyje)
             {
                 Console.WriteLine("\nTwoja kolej:");
                 Console.WriteLine("1. Atak");
                 Console.WriteLine("2. Leczenie");
 
-                // Get player's choice
+                // --------------------------------------------------
                 int wybor;
                 while (!int.TryParse(Console.ReadLine(), out wybor) || wybor < 1 || wybor > 2)
                 {
@@ -38,27 +39,27 @@ namespace Gra
 
                 if (wybor == 1)
                 {
-                    // Player attacks enemy
+                    // --------------------------------------------------
                     gracz.Atak(przeciwnik);
                 }
                 else
                 {
-                    // Player heals themselves
+                    // --------------------------------------------------
                     gracz.leczeniee();
                 }
 
-                // Check if enemy is defeated
+                // --------------------------------------------------
                 if (!przeciwnik.Zyje)
                 {
                     Console.WriteLine("Gratulacje pokonałes przeciwnika!");
                     break;
                 }
 
-                // Enemy's turn
+                // --------------------------------------------------
                 Console.WriteLine("\nkolej przeciwnika:");
                 przeciwnik.Atak(gracz);
 
-                // Check if player is defeated
+                // --------------------------------------------------
                 if (!gracz.Zyje)
                 {
                     Console.WriteLine("Koniec gry zostałes pokonany przez przeciwnika");
@@ -85,7 +86,7 @@ namespace Gra
         public void Atak(Przeciwnik przeciwnik)
         {
             Random random = new Random();
-            int obrazenia = random.Next(10, 21); // Generate a random damage between 10 and 20
+            int obrazenia = random.Next(10, 21);
             przeciwnik.Odniesioneobrazenia(obrazenia);
             Console.WriteLine($"Zatakowałes przeciwnika zadając mu {obrazenia} obrazen.");
         }
@@ -93,7 +94,7 @@ namespace Gra
         public void leczeniee()
         {
             Random random = new Random();
-            int lecz = random.Next(10, 21); // Generate a random heal between 10 and 20
+            int lecz = random.Next(10, 21);
             Leczenie += lecz;
             Console.WriteLine($"Uleczyłes sie o {lecz} zdrowia.");
         }
@@ -121,7 +122,7 @@ namespace Gra
         public void Atak(Gracz gracz)
         {
             Random random = new Random();
-            int obrazenia = random.Next(5, 16); // Generate a random damage between 5 and 15
+            int obrazenia = random.Next(5, 16); 
             gracz.Odniesioneobrazenia(obrazenia);
             Console.WriteLine($"Przeciwnik zatakował cię i zadałci {obrazenia} obrażen.");
         }
