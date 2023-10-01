@@ -1,0 +1,453 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GraRPG
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Witaj w grze RPG!");
+            Console.WriteLine("Wybierz tryb gry:");
+            Console.WriteLine("1. Jednoosobowy");
+            Console.WriteLine("2. Dwuosobowy");
+
+            int trybGry;
+            while (!int.TryParse(Console.ReadLine(), out trybGry) || (trybGry != 1 && trybGry != 2))
+            {
+                Console.WriteLine("Nieprawidłowy wybór. Wybierz 1 lub 2.");
+            }
+
+            if (trybGry == 1)
+            {
+                GrajJednoosobowo();
+            }
+            else
+            {
+                GrajDwuosobowo();
+            }
+        }
+
+        static void GrajJednoosobowo()
+        {
+            Console.WriteLine("Wybierz swoją postać:");
+            Console.WriteLine("1. Wojownik");
+            Console.WriteLine("2. Mag");
+            Console.WriteLine("3. Łucznik");
+            Console.WriteLine("4. Paladyn");
+            Console.WriteLine("5. Barbarzyńca");
+            Console.WriteLine("6. Kapłan");
+
+            int wyborGracza1;
+            while (!int.TryParse(Console.ReadLine(), out wyborGracza1) || wyborGracza1 < 1 || wyborGracza1 > 6)
+            {
+                Console.WriteLine("Nieprawidłowy wybór. Wybierz liczbę od 1 do 6.");
+            }
+
+            Gracz gracz1 = StworzPostac(wyborGracza1);
+
+            Console.Write("Podaj imię swojego bohatera: ");
+            string nazwaGracza1 = Console.ReadLine();
+            Console.WriteLine("-----------------------------");
+            Console.WriteLine($"Witaj {nazwaGracza1} w grze RPG");
+
+            Przeciwnik przeciwnik = WylosujPrzeciwnika();
+
+            while (gracz1.Zyje && przeciwnik.Zyje)
+            {
+                Console.WriteLine("\nTwoja kolej:");
+                Console.WriteLine("1. Atak");
+                Console.WriteLine("2. Leczenie");
+                Console.WriteLine("3. Ucieczka");
+
+                int wyborGracza;
+                while (!int.TryParse(Console.ReadLine(), out wyborGracza) || wyborGracza < 1 || wyborGracza > 3)
+                {
+                    Console.WriteLine("Złe kliknięcie. Wybierz 1, 2 lub 3.");
+                }
+
+                if (wyborGracza == 1)
+                {
+                    gracz1.Atak(przeciwnik);
+                }
+                else if (wyborGracza == 2)
+                {
+                    gracz1.Leczenie();
+                }
+                else
+                {
+                    if (Ucieczka())
+                    {
+                        Console.WriteLine("Udało ci się uciec od przeciwnika!");
+                        przeciwnik = WylosujPrzeciwnika();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Nie udało się uciec!");
+                    }
+                }
+
+                if (!przeciwnik.Zyje)
+                {
+                    Console.WriteLine("Gratulacje, pokonałeś przeciwnika!");
+                    przeciwnik = WylosujPrzeciwnika();
+                }
+
+                Console.WriteLine("\nKolej przeciwnika:");
+                przeciwnik.Atak(gracz1);
+
+                if (!gracz1.Zyje)
+                {
+                    Console.WriteLine("Koniec gry, zostałeś pokonany przez przeciwnika.");
+                    break;
+                }
+            }
+        }
+
+        static void GrajDwuosobowo()
+        {
+            Console.WriteLine("Gracz 1 - Wybierz swoją postać:");
+            Console.WriteLine("1. Wojownik");
+            Console.WriteLine("2. Mag");
+            Console.WriteLine("3. Łucznik");
+            Console.WriteLine("4. Paladyn");
+            Console.WriteLine("5. Barbarzyńca");
+            Console.WriteLine("6. Kapłan");
+
+            int wyborGracza1;
+            while (!int.TryParse(Console.ReadLine(), out wyborGracza1) || wyborGracza1 < 1 || wyborGracza1 > 6)
+            {
+                Console.WriteLine("Nieprawidłowy wybór. Wybierz liczbę od 1 do 6.");
+            }
+
+            Gracz gracz1 = StworzPostac(wyborGracza1);
+
+            Console.Write("Gracz 1 - Podaj imię swojego bohatera: ");
+            string nazwaGracza1 = Console.ReadLine();
+
+            Console.WriteLine("\nGracz 2 - Wybierz swoją postać:");
+            Console.WriteLine("1. Wojownik");
+            Console.WriteLine("2. Mag");
+            Console.WriteLine("3. Łucznik");
+            Console.WriteLine("4. Paladyn");
+            Console.WriteLine("5. Barbarzyńca");
+            Console.WriteLine("6. Kapłan");
+
+            int wyborGracza2;
+            while (!int.TryParse(Console.ReadLine(), out wyborGracza2) || wyborGracza2 < 1 || wyborGracza2 > 6)
+            {
+                Console.WriteLine("Nieprawidłowy wybór. Wybierz liczbę od 1 do 6.");
+            }
+
+            Gracz gracz2 = StworzPostac(wyborGracza2);
+
+            Console.Write("Gracz 2 - Podaj imię swojego bohatera: ");
+            string nazwaGracza2 = Console.ReadLine();
+            Console.WriteLine("-----------------------------");
+            Console.WriteLine($"Witajcie {nazwaGracza1} i {nazwaGracza2} w grze RPG");
+
+            Przeciwnik przeciwnik = WylosujPrzeciwnika();
+
+            while ((gracz1.Zyje || gracz2.Zyje) && przeciwnik.Zyje)
+            {
+                Console.WriteLine("\nRunda gracza 1:");
+                Console.WriteLine("1. Atak");
+                Console.WriteLine("2. Leczenie");
+                Console.WriteLine("3. Ucieczka");
+
+                int wyborGracza1;
+                while (!int.TryParse(Console.ReadLine(), out wyborGracza1) || wyborGracza1 < 1 || wyborGracza1 > 3)
+                {
+                    Console.WriteLine("Złe kliknięcie. Wybierz 1, 2 lub 3.");
+                }
+
+                if (wyborGracza1 == 1)
+                {
+                    gracz1.Atak(przeciwnik);
+                }
+                else if (wyborGracza1 == 2)
+                {
+                    gracz1.Leczenie();
+                }
+                else
+                {
+                    if (Ucieczka())
+                    {
+                        Console.WriteLine("Gracz 1 ucieka od przeciwnika!");
+                        przeciwnik = WylosujPrzeciwnika();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Nie udało się uciec!");
+                    }
+                }
+
+                if (!przeciwnik.Zyje)
+                {
+                    Console.WriteLine("Gracz 1, gratulacje, pokonałeś przeciwnika!");
+                    przeciwnik = WylosujPrzeciwnika();
+                }
+
+                Console.WriteLine("\nRunda gracza 2:");
+                Console.WriteLine("1. Atak");
+                Console.WriteLine("2. Leczenie");
+                Console.WriteLine("3. Ucieczka");
+
+                int wyborGracza2;
+                while (!int.TryParse(Console.ReadLine(), out wyborGracza2) || wyborGracza2 < 1 || wyborGracza2 > 3)
+                {
+                    Console.WriteLine("Złe kliknięcie. Wybierz 1, 2 lub 3.");
+                }
+
+                if (wyborGracza2 == 1)
+                {
+                    gracz2.Atak(przeciwnik);
+                }
+                else if (wyborGracza2 == 2)
+                {
+                    gracz2.Leczenie();
+                }
+                else
+                {
+                    if (Ucieczka())
+                    {
+                        Console.WriteLine("Gracz 2 ucieka od przeciwnika!");
+                        przeciwnik = WylosujPrzeciwnika();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Nie udało się uciec!");
+                    }
+                }
+
+                if (!przeciwnik.Zyje)
+                {
+                    Console.WriteLine("Gracz 2, gratulacje, pokonałeś przeciwnika!");
+                    przeciwnik = WylosujPrzeciwnika();
+                }
+
+                Console.WriteLine("\nKolej przeciwnika:");
+                przeciwnik.Atak(gracz1);
+
+                if (!gracz1.Zyje && !gracz2.Zyje)
+                {
+                    Console.WriteLine("Koniec gry, zostaliście pokonani przez przeciwnika.");
+                    break;
+                }
+            }
+        }
+
+        static Gracz StworzPostac(int wybor)
+        {
+            switch (wybor)
+            {
+                case 1:
+                    return new Wojownik("Wojownik");
+                case 2:
+                    return new Mag("Mag");
+                case 3:
+                    return new Łucznik("Łucznik");
+                case 4:
+                    return new Paladyn("Paladyn");
+                case 5:
+                    return new Barbarzyńca("Barbarzyńca");
+                case 6:
+                    return new Kapłan("Kapłan");
+                default:
+                    return new Wojownik("Wojownik");
+            }
+        }
+
+        static Przeciwnik WylosujPrzeciwnika()
+        {
+            Random rand = new Random();
+            int losowaLiczba = rand.Next(1, 4);
+
+            switch (losowaLiczba)
+            {
+                case 1:
+                    return new Przeciwnik("Goblin", 50, 10);
+                case 2:
+                    return new Przeciwnik("Ork", 75, 15);
+                case 3:
+                    return new Przeciwnik("Smok", 150, 30);
+                default:
+                    return new Przeciwnik("Goblin", 50, 10);
+            }
+        }
+
+        static bool Ucieczka()
+        {
+            Random rand = new Random();
+            int losowaLiczba = rand.Next(1, 101);
+
+            return losowaLiczba <= 50;
+        }
+    }
+
+    class Gracz
+    {
+        public string Nazwa { get; protected set; }
+        public int Zdrowie { get; protected set; }
+        public int Obrazenia { get; protected set; }
+        public bool Zyje { get; protected set; }
+
+        public Gracz(string nazwa, int zdrowie, int obrazenia)
+        {
+            Nazwa = nazwa;
+            Zdrowie = zdrowie;
+            Obrazenia = obrazenia;
+            Zyje = true;
+        }
+
+        public virtual void Atak(Przeciwnik przeciwnik)
+        {
+            Console.WriteLine($"{Nazwa} atakuje {przeciwnik.Nazwa} za {Obrazenia} obrażeń.");
+            przeciwnik.Zdrowie -= Obrazenia;
+            if (przeciwnik.Zdrowie <= 0)
+            {
+                przeciwnik.Zyje = false;
+            }
+        }
+
+        public void Leczenie()
+        {
+            Zdrowie += 20;
+            Console.WriteLine($"{Nazwa} uleczony o 20 punktów zdrowia. Aktualne zdrowie: {Zdrowie}");
+        }
+    }
+
+    class Wojownik : Gracz
+    {
+        public Wojownik(string nazwa) : base(nazwa, 100, 20)
+        {
+        }
+
+        public override void Atak(Przeciwnik przeciwnik)
+        {
+            base.Atak(przeciwnik);
+            Console.WriteLine("Wojownik używa umiejętności specjalnej: Cięcie Mieczem!");
+            przeciwnik.Zdrowie -= 10;
+            if (przeciwnik.Zdrowie <= 0)
+            {
+                przeciwnik.Zyje = false;
+            }
+        }
+    }
+
+    class Mag : Gracz
+    {
+        public Mag(string nazwa) : base(nazwa, 70, 30)
+        {
+        }
+
+        public override void Atak(Przeciwnik przeciwnik)
+        {
+            base.Atak(przeciwnik);
+            Console.WriteLine("Mag używa umiejętności specjalnej: Fireball!");
+            przeciwnik.Zdrowie -= 20;
+            if (przeciwnik.Zdrowie <= 0)
+            {
+                przeciwnik.Zyje = false;
+            }
+        }
+    }
+
+    class Łucznik : Gracz
+    {
+        public Łucznik(string nazwa) : base(nazwa, 80, 15)
+        {
+        }
+
+        public override void Atak(Przeciwnik przeciwnik)
+        {
+            base.Atak(przeciwnik);
+            Console.WriteLine("Łucznik używa umiejętności specjalnej: Precyzyjny Strzał!");
+            przeciwnik.Zdrowie -= 25;
+            if (przeciwnik.Zdrowie <= 0)
+            {
+                przeciwnik.Zyje = false;
+            }
+        }
+    }
+
+    class Paladyn : Gracz
+    {
+        public Paladyn(string nazwa) : base(nazwa, 120, 18)
+        {
+        }
+
+        public override void Atak(Przeciwnik przeciwnik)
+        {
+            base.Atak(przeciwnik);
+            Console.WriteLine("Paladyn używa umiejętności specjalnej: Święte Uderzenie!");
+            przeciwnik.Zdrowie -= 15;
+            if (przeciwnik.Zdrowie <= 0)
+            {
+                przeciwnik.Zyje = false;
+            }
+        }
+    }
+
+    class Barbarzyńca : Gracz
+    {
+        public Barbarzyńca(string nazwa) : base(nazwa, 150, 25)
+        {
+        }
+
+        public override void Atak(Przeciwnik przeciwnik)
+        {
+            base.Atak(przeciwnik);
+            Console.WriteLine("Barbarzyńca używa umiejętności specjalnej: Szał!");
+            przeciwnik.Zdrowie -= 30;
+            if (przeciwnik.Zdrowie <= 0)
+            {
+                przeciwnik.Zyje = false;
+            }
+        }
+    }
+
+    class Kapłan : Gracz
+    {
+        public Kapłan(string nazwa) : base(nazwa, 90, 10)
+        {
+        }
+
+        public override void Atak(Przeciwnik przeciwnik)
+        {
+            base.Atak(przeciwnik);
+            Console.WriteLine("Kapłan używa umiejętności specjalnej: Leczenie Współtowarzyszy!");
+            Zdrowie += 15;
+            Console.WriteLine($"Współtowarzysze zostali uleczeni o 15 punktów zdrowia. Aktualne zdrowie {Nazwa}: {Zdrowie}");
+        }
+    }
+
+    class Przeciwnik
+    {
+        public string Nazwa { get; private set; }
+        public int Zdrowie { get; set; }
+        public int Obrazenia { get; private set; }
+        public bool Zyje { get; set; }
+
+        public Przeciwnik(string nazwa, int zdrowie, int obrazenia)
+        {
+            Nazwa = nazwa;
+            Zdrowie = zdrowie;
+            Obrazenia = obrazenia;
+            Zyje = true;
+        }
+
+        public void Atak(Gracz gracz)
+        {
+            Console.WriteLine($"{Nazwa} atakuje {gracz.Nazwa} za {Obrazenia} obrażeń.");
+            gracz.Zdrowie -= Obrazenia;
+            if (gracz.Zdrowie <= 0)
+            {
+                gracz.Zyje = false;
+            }
+        }
+    }
+}
