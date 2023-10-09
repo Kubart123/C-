@@ -158,17 +158,17 @@ namespace GraRPG
                 Console.WriteLine("2. Leczenie");
                 Console.WriteLine("3. Ucieczka");
 
-                int wyborGracza1;
-                while (!int.TryParse(Console.ReadLine(), out wyborGracza1) || wyborGracza1 < 1 || wyborGracza1 > 3)
+                int wyboGracza1;
+                while (!int.TryParse(Console.ReadLine(), out wyboGracza1) || wyboGracza1 < 1 || wyboGracza1 > 3)
                 {
                     Console.WriteLine("Złe kliknięcie. Wybierz 1, 2 lub 3.");
                 }
 
-                if (wyborGracza1 == 1)
+                if (wyboGracza1 == 1)
                 {
                     gracz1.Atak(przeciwnik);
                 }
-                else if (wyborGracza1 == 2)
+                else if (wyboGracza1 == 2)
                 {
                     gracz1.Leczenie();
                 }
@@ -196,17 +196,17 @@ namespace GraRPG
                 Console.WriteLine("2. Leczenie");
                 Console.WriteLine("3. Ucieczka");
 
-                int wyborGracza2;
-                while (!int.TryParse(Console.ReadLine(), out wyborGracza2) || wyborGracza2 < 1 || wyborGracza2 > 3)
+                int wyboGracza2;
+                while (!int.TryParse(Console.ReadLine(), out wyboGracza2) || wyboGracza2 < 1 || wyboGracza2 > 3)
                 {
                     Console.WriteLine("Złe kliknięcie. Wybierz 1, 2 lub 3.");
                 }
 
-                if (wyborGracza2 == 1)
+                if (wyboGracza2 == 1)
                 {
                     gracz2.Atak(przeciwnik);
                 }
-                else if (wyborGracza2 == 2)
+                else if (wyboGracza2 == 2)
                 {
                     gracz2.Leczenie();
                 }
@@ -294,6 +294,8 @@ namespace GraRPG
         public int Zdrowie { get; protected set; }
         public int Obrazenia { get; protected set; }
         public bool Zyje { get; protected set; }
+        public int Zdowie { get; internal set; }
+        public bool Zje { get; internal set; }
 
         public Gracz(string nazwa, int zdrowie, int obrazenia)
         {
@@ -443,10 +445,10 @@ namespace GraRPG
         public void Atak(Gracz gracz)
         {
             Console.WriteLine($"{Nazwa} atakuje {gracz.Nazwa} za {Obrazenia} obrażeń.");
-            gracz.Zdrowie -= Obrazenia;
+            gracz.Zdowie -= Obrazenia;
             if (gracz.Zdrowie <= 0)
             {
-                gracz.Zyje = false;
+                gracz.Zje = false;
             }
         }
     }
